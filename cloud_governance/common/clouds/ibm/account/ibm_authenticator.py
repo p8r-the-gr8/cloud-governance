@@ -1,6 +1,8 @@
 import logging
+import os
 
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+from ibm_cloud_sdk_core.authenticators import ContainerAuthenticator
 
 from cloud_governance.main.environment_variables import environment_variables
 
@@ -14,12 +16,21 @@ class IBMAuthenticator:
     def __init__(self):
         logging.disable(logging.DEBUG)
         self.env_config = environment_variables
-        if hasattr(self.env_config, 'IBM_ACCOUNT_ID'):
-            self.account_id = self.env_config.IBM_ACCOUNT_ID
+        # if hasattr(self.env_config, 'IBM_ACCOUNT_ID'):
+        #     self.account_id = self.env_config.IBM_ACCOUNT_ID
+        # else:
+        #     self.account_id = self.env_config.environment_variables_dict.get('IBM_ACCOUNT_ID')
+        # if hasattr(self.env_config, 'IBM_CLOUD_API_KEY'):
+        #     self.__api_key = self.env_config.IBM_CLOUD_API_KEY
+        # else:
+        #     self.__api_key = self.env_config.environment_variables_dict.get('IBM_CLOUD_API_KEY')
+        # self.iam_authenticator = IAMAuthenticator(self.__api_key)
+        
+        if hasattr(self.env_config, 'TRUSTED_PROFILE_NAME'):
+            self.__trusted_profile_name = self.env_config.TRUSTED_PROFILE_NAME
         else:
-            self.account_id = self.env_config.environment_variables_dict.get('IBM_ACCOUNT_ID')
-        if hasattr(self.env_config, 'IBM_CLOUD_API_KEY'):
-            self.__api_key = self.env_config.IBM_CLOUD_API_KEY
-        else:
-            self.__api_key = self.env_config.environment_variables_dict.get('IBM_CLOUD_API_KEY')
-        self.iam_authenticator = IAMAuthenticator(self.__api_key)
+            self.__trusted_profile_name = self.env_config.environment_variables_dict.get('TRUSTED_PROFILE_NAME')
+
+
+        # create an authenticator based on a trusted profile
+        self.iam_authenticator = ContainerAuthenticator(iam_profile_name=self.__trusted_profile_name)

@@ -170,6 +170,9 @@ class EnvironmentVariables:
                                                                                                 '')
         self._environment_variables_dict['IBM_CLOUD_API_KEY'] = EnvironmentVariables.get_env('IBM_CLOUD_API_KEY', '')
 
+        self._environment_variables_dict['TRUSTED_PROFILE_NAME'] = EnvironmentVariables.get_env('TRUSTED_PROFILE_NAME',
+                                                                                                '')
+
         if (self._environment_variables_dict['USAGE_REPORTS_APIKEY'] or
                 self._environment_variables_dict['IBM_CLOUD_API_KEY'] or
                 hasattr(self, "IBM_CLOUD_API_KEY")):
